@@ -3,7 +3,7 @@
 Summary:	Multicore parallel processing functions for Octave
 Name:       octave-%{pkgname}
 Version:	0.2.15
-Release:        5
+Release:        6
 Source0:	%{pkgname}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
