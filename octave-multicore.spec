@@ -1,41 +1,38 @@
-%define	pkgname multicore
+%define octpkg multicore
+
+# Exclude .oct files from provides
+%define __provides_exclude_from ^%{octpkglibdir}/.*.oct$
 
 Summary:	Multicore parallel processing functions for Octave
-Name:       octave-%{pkgname}
+Name:		octave-%{octpkg}
 Version:	0.2.15
-Release:        6
-Source0:	%{pkgname}-%{version}.tar.gz
+Release:	1
+Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		http://octave.sourceforge.net/multicore/
-Conflicts:	octave-forge <= 20090607
-Requires:	octave >= 2.9.12
-BuildRequires:  octave-devel >= 2.9.12
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glu)
-Requires:       octave(api) = %{octave_api}
+Url:		https://octave.sourceforge.io/%{octpkg}/
+
+BuildRequires:	octave-devel >= 2.9.12
+
+Requires:	octave(api) = %{octave_api}
+
 Requires(post): octave
 Requires(postun): octave
 
 %description
-Multicore parallel processing functions for Octave.
+An Octave-forge package providing functions for parallel processing on
+multiple cores.
+
+This package is part of unmantained Octave-Forge collection.
 
 %prep
-%setup -q -c %{pkgname}-%{version}
-cp %{SOURCE0} .
+%setup -qcT
+
+%build
+%octave_pkg_build -T
 
 %install
-%__install -m 755 -d %{buildroot}%{_datadir}/octave/packages/
-%__install -m 755 -d %{buildroot}%{_libdir}/octave/packages/
-export OCT_PREFIX=%{buildroot}%{_datadir}/octave/packages
-export OCT_ARCH_PREFIX=%{buildroot}%{_libdir}/octave/packages
-octave -q --eval "pkg prefix $OCT_PREFIX $OCT_ARCH_PREFIX; pkg install -verbose -nodeps -local %{pkgname}-%{version}.tar.gz"
-
-tar zxf %{SOURCE0} 
-mv %{pkgname}-%{version}/COPYING .
-mv %{pkgname}-%{version}/DESCRIPTION .
-
-%clean
+%octave_pkg_install
 
 %post
 %octave_cmd pkg rebuild
@@ -47,6 +44,10 @@ mv %{pkgname}-%{version}/DESCRIPTION .
 %octave_cmd pkg rebuild
 
 %files
-%doc COPYING DESCRIPTION
-%{_datadir}/octave/packages/%{pkgname}-%{version}
-%{_libdir}/octave/packages/%{pkgname}-%{version}
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%dir %{octpkgdir}
+%{octpkgdir}/*
+#%doc %{octpkg}-%{version}/NEWS
+%doc %{octpkg}-%{version}/COPYING
+
